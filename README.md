@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 ## Run
 
-After virtual enviroment is set you, you may run the following line to start the program
+After virtual enviroment is set up, you may run the following line to start the program
 ```
 flask run
 ```
