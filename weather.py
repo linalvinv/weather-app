@@ -16,19 +16,27 @@ class WeatherData:
 #get API key without hardcoding into file
 API_key = os.getenv('API_KEY')
 
-def getCoordinates(cityName,stateCode,countryCode,APIkey):
-    print("Hi")
-    response = requests.get(
-        f'http://api.openweathermap.org/geo/1.0/direct?q={cityName},{stateCode},{countryCode}&appid={APIkey}').json()
-    #checks if location exists
-    if 'lat' not in response:
-        print("Could not find specified coordinates")
-        return 999,999
-    print(response)
-    #return coords
-    latitude = response[0].get('lat')
-    longitude = response[0].get('lon')
-    return (latitude,longitude)
+def getCoordinates(cityName, stateCode, countryCode, APIkey):
+    try:
+        response = requests.get(
+            f'http://api.openweathermap.org/geo/1.0/direct?q={cityName},{stateCode},{countryCode}&appid={APIkey}'
+        )
+        #check for error
+        response.raise_for_status()  
+        data = response.json()
+        # Check if data is a non-empty list
+        if not isinstance(data, list) or len(data) == 0:
+            print("Could not find specified coordinates")
+            return 999, 999
+        # Access coordinates
+        latitude = data[0].get('lat')
+        longitude = data[0].get('lon')
+        
+        return (latitude, longitude)
+
+    except Exception as e:
+        print(e)
+        return 999, 999
 
 def getWeather(lat, lon, APIkey):
     #use coords to get data of location
